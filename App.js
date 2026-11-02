@@ -1,7 +1,7 @@
 // TASK 2 — Interactive Profile Card (starter)
 // Start point: the solution of Task 1 + the new data. Follow the steps in README.md.
 // TODO: add the imports you need in each step (Pressable, Button, Alert, TextInput, useState...)
-import { View, Text, Image, ScrollView, StyleSheet, Platform, Pressable, Button, Alert} from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, Platform, Pressable, Button, Alert, TextInput} from 'react-native';
 import { useState } from 'react';
 
 const COLORS = {
@@ -22,6 +22,7 @@ const BIO =
 const SKILLS = ['React Native', 'JavaScript', 'UI Design', 'Git', 'Flexbox'];
 const BASE_FOLLOWERS = 1200;
 // TODO STEP 4: const MAX_MESSAGE = 140;
+const MAX_MESSAGE = 140;
 
 // Adds thousands separators: 1200 -> '1,200'
 function formatCount(n) {
@@ -32,6 +33,8 @@ export default function App() {
 
   //STATE
   const [isFollowing, setIsFollowing] = useState(false);
+  const [isComposerOpen, setIsComposerOpen] = useState(false);
+  const [message, setMessage] = useState('');
 
 
   // TODO STEP 1: write the event handlers (handleFollowPress, handleMessagePress, handleSharePress)
@@ -41,24 +44,27 @@ export default function App() {
   };
 
   const handleMessagePress = () => {
-    Alert.alert('Message button pressed');
+    setIsComposerOpen(!isComposerOpen);
   };
 
   const handleSharePress = () => {
-    Alert.alert('Share button pressed');
+    Alert.alert('Share profile', 'Sharing profile...');
+  };
+
+  const handleSendPress = () => {
+    Alert.alert('Message sent', message);
+    setMessage('');
+    setIsComposerOpen(false);
   };
 
   // STEP 3: followers must grow by 1 while you are following
   const followers = BASE_FOLLOWERS + (isFollowing ? 1 : 0);
+  const isSendDisabled = message.trim().length === 0;
   const stats = [
     { label: 'Projects', value: '24' },
     { label: 'Followers', value: formatCount(followers) },
     { label: 'Following', value: '180' },
   ];
-
-  
-  // TODO STEP 3: add the state for follow / unfollow (useState)
-
 
   // TODO STEP 4: add the state for the message composer
   // TODO STEP 5: add the state for the bio, the online status and the selected skills
@@ -131,15 +137,42 @@ export default function App() {
                 {isFollowing ? 'Following' : 'Follow'}
               </Text>
             </Pressable>
-            <Pressable onPress={handleMessagePress} style={({pressed}) =>[
-                {
-                  opacity: pressed ? 0.6 : 1,
-                },
-                styles.button
-              ]}>
-              <Text style={styles.buttonText}>Message</Text>
+            <Pressable
+              onPress={handleMessagePress}
+              style={({ pressed }) => [styles.button, pressed && styles.pressed]}
+            >
+              <Text style={styles.buttonText}>{isComposerOpen ? 'Close' : 'Message'}</Text>
             </Pressable>
           </View>
+
+          {isComposerOpen && (
+            <View style={styles.composer}>
+              <TextInput
+                style={styles.input}
+                value={message}
+                onChangeText={(newText) => setMessage(newText)}
+                maxLength={MAX_MESSAGE}
+                placeholder="Write a message..."
+                placeholderTextColor={COLORS.muted}
+              />
+              <View style={styles.composerFooter}>
+                <Text style={styles.counter}>
+                  {message.length}/{MAX_MESSAGE} characters
+                </Text>
+                <Pressable
+                  onPress={handleSendPress}
+                  disabled={isSendDisabled}
+                  style={({ pressed }) => [
+                    styles.sendButton,
+                    isSendDisabled && styles.sendButtonDisabled,
+                    pressed && styles.pressed,
+                  ]}
+                >
+                  <Text style={styles.sendText}>Send</Text>
+                </Pressable>
+              </View>
+            </View>
+          )}
 
           <View style={styles.shareWrapper}>
             <Button
@@ -312,6 +345,72 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
   },
   buttonTextPrimary: {
+    color: '#FFFFFF',
+  },
+    buttonFollowing: {
+    backgroundColor: COLORS.primaryLight,
+  },
+  composer: {
+    marginTop: 16,
+  },
+  composerFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  counter: {
+    fontSize: 12,
+    color: COLORS.muted,
+  },
+  hint: {
+    marginTop: 8,
+    fontSize: 12,
+    color: COLORS.muted,
+  },
+  input: {
+    height: 44,
+    paddingHorizontal: 12,
+    fontSize: 15,
+    color: COLORS.text,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 12,
+  },
+  link: {
+    marginTop: 4,
+    fontSize: 14,
+    fontWeight: '600',
+    color: COLORS.primary,
+  },
+  offlineBadge: {
+    backgroundColor: COLORS.offline,
+  },
+  pressed: {
+    opacity: 0.6,
+  },
+  sendButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 10,
+    backgroundColor: COLORS.primary,
+  },
+  sendButtonDisabled: {
+    backgroundColor: COLORS.offline,
+  },
+  sendText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  shareWrapper: {
+    marginTop: 12,
+    alignItems: 'center',
+  },
+  tagSelected: {
+    backgroundColor: COLORS.primary,
+  },
+  tagTextSelected: {
     color: '#FFFFFF',
   },
 });
