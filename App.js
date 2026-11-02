@@ -1,7 +1,7 @@
 // TASK 2 — Interactive Profile Card (starter)
 // Start point: the solution of Task 1 + the new data. Follow the steps in README.md.
 // TODO: add the imports you need in each step (Pressable, Button, Alert, TextInput, useState...)
-import { View, Text, Image, ScrollView, StyleSheet, Platform } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, Platform, Pressable, Button, Alert} from 'react-native';
 
 const COLORS = {
   background: '#EEF1F6',
@@ -28,6 +28,19 @@ function formatCount(n) {
 }
 
 export default function App() {
+
+  const handleFollowPress = () => {
+    Alert.alert('Follow button pressed');
+  };
+
+  const handleMessagePress = () => {
+    Alert.alert('Message button pressed');
+  };
+
+  const handleSharePress = () => {
+    Alert.alert('Share button pressed');
+  };
+
   // STEP 3: followers must grow by 1 while you are following
   const followers = BASE_FOLLOWERS;
   const stats = [
@@ -97,12 +110,20 @@ export default function App() {
                 STEP 2: give them visual feedback with the style function (pressed).
                 STEP 3: make the Follow button toggle between 'Follow' and 'Following'. */}
           <View style={styles.actions}>
-            <View style={[styles.button, styles.buttonPrimary]}>
+            <Pressable onPress={handleFollowPress} style={[styles.button, styles.buttonPrimary]}>
               <Text style={[styles.buttonText, styles.buttonTextPrimary]}>Follow</Text>
-            </View>
-            <View style={styles.button}>
+            </Pressable>
+            <Pressable onPress={handleMessagePress} style={styles.button}>
               <Text style={styles.buttonText}>Message</Text>
-            </View>
+            </Pressable>
+          </View>
+
+          <View style={styles.shareWrapper}>
+            <Button
+              title="Share profile"
+              color={COLORS.primary}
+              onPress={handleSharePress}
+            />
           </View>
 
           {/* TODO STEP 4: when 'Message' is pressed, show a composer here (TextInput + counter + Send) */}
