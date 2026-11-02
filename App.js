@@ -14,7 +14,7 @@ const COLORS = {
   border: '#E5E7EB',
   online: '#22C55E',
   offline: '#9CA3AF',
-  
+  error: '#DC2626',
 };
 
 const BIO =
@@ -29,6 +29,8 @@ const MAX_MESSAGE = 140;
 function formatCount(n) {
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
+
+
 
 export default function App() {
 
@@ -82,6 +84,7 @@ export default function App() {
 
   // STEP 3: followers must grow by 1 while you are following
   const followers = BASE_FOLLOWERS + (isFollowing ? 1 : 0);
+  const isMaxReached = message.length >= MAX_MESSAGE;
   const isSendDisabled = message.trim().length === 0;
   const stats = [
     { label: 'Projects', value: '24' },
@@ -194,6 +197,9 @@ export default function App() {
                 placeholder="Write a message..."
                 placeholderTextColor={COLORS.muted}
               />
+              {isMaxReached && (
+                <Text style={styles.error}>Maximum length reached</Text>
+              )}
               <View style={styles.composerFooter}>
                 <Text style={styles.counter}>
                   {message.length}/{MAX_MESSAGE} characters
@@ -452,4 +458,9 @@ const styles = StyleSheet.create({
   tagTextSelected: {
     color: '#FFFFFF',
   },
+  error: {
+  marginTop: 6,
+  fontSize: 12,
+  color: COLORS.error,
+},
 });
