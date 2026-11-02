@@ -14,6 +14,7 @@ const COLORS = {
   border: '#E5E7EB',
   online: '#22C55E',
   offline: '#9CA3AF',
+  
 };
 
 const BIO =
@@ -38,12 +39,15 @@ export default function App() {
   const [isBioExpanded, setIsBioExpanded] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
   const [selectedSkills, setSelectedSkills] = useState([]);
+  const [isBusy, setIsBusy] = useState(false);
 
 
   // TODO STEP 1: write the event handlers (handleFollowPress, handleMessagePress, handleSharePress)
   //HANDLER EVENTS
   const handleFollowPress = () => {
-    setIsFollowing(!isFollowing);
+  setIsFollowing(!isFollowing);
+  setIsBusy(true);
+  setTimeout(() => setIsBusy(false), 2000);
   };
 
   const handleMessagePress = () => {
@@ -161,10 +165,11 @@ export default function App() {
           <View style={styles.actions}>
             <Pressable
               onPress={handleFollowPress}
+              disabled={isBusy}
               style={({ pressed }) => [
                 styles.button,
                 isFollowing ? styles.buttonFollowing : styles.buttonPrimary,
-                pressed && styles.pressed,
+                (pressed || isBusy) && styles.pressed,
               ]}
             >
               <Text style={[styles.buttonText, !isFollowing && styles.buttonTextPrimary]}>
