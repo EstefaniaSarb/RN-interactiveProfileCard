@@ -110,10 +110,21 @@ export default function App() {
                 STEP 2: give them visual feedback with the style function (pressed).
                 STEP 3: make the Follow button toggle between 'Follow' and 'Following'. */}
           <View style={styles.actions}>
-            <Pressable onPress={handleFollowPress} style={[styles.button, styles.buttonPrimary]}>
+            <Pressable 
+            onPress={handleFollowPress} style={({pressed}) =>[
+                {
+                  opacity: pressed ? 0.6 : 1,
+                },
+                styles.button, styles.buttonPrimary
+              ]}>
               <Text style={[styles.buttonText, styles.buttonTextPrimary]}>Follow</Text>
             </Pressable>
-            <Pressable onPress={handleMessagePress} style={styles.button}>
+            <Pressable onPress={handleMessagePress} style={({pressed}) =>[
+                {
+                  opacity: pressed ? 0.6 : 1,
+                },
+                styles.button
+              ]}>
               <Text style={styles.buttonText}>Message</Text>
             </Pressable>
           </View>
