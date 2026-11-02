@@ -30,7 +30,18 @@ function formatCount(n) {
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-
+function Tag({ label, selected, onPress }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[styles.tag, selected && styles.tagSelected]}
+    >
+      <Text style={[styles.tagText, selected && styles.tagTextSelected]}>
+        {label}
+      </Text>
+    </Pressable>
+  );
+}
 
 export default function App() {
 
@@ -143,20 +154,14 @@ export default function App() {
 
           {/* TODO STEP 5: make the skills selectable (Pressable + array state) */}
           <View style={styles.tags}>
-            {SKILLS.map((skill) => {
-              const isSelected = selectedSkills.includes(skill);
-              return (
-                <Pressable
-                  key={skill}
-                  onPress={() => handleSkillPress(skill)}
-                  style={[styles.tag, isSelected && styles.tagSelected]}
-                >
-                  <Text style={[styles.tagText, isSelected && styles.tagTextSelected]}>
-                    {skill}
-                  </Text>
-                </Pressable>
-              );
-            })}
+            {SKILLS.map((skill) => (
+              <Tag
+                key={skill}
+                label={skill}
+                selected={selectedSkills.includes(skill)}
+                onPress={() => handleSkillPress(skill)}
+              />
+            ))}
           </View>
           <Text style={styles.hint}>
             Tap a skill to select it · {selectedSkills.length} selected
