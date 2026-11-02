@@ -2,6 +2,7 @@
 // Start point: the solution of Task 1 + the new data. Follow the steps in README.md.
 // TODO: add the imports you need in each step (Pressable, Button, Alert, TextInput, useState...)
 import { View, Text, Image, ScrollView, StyleSheet, Platform, Pressable, Button, Alert} from 'react-native';
+import { useState } from 'react';
 
 const COLORS = {
   background: '#EEF1F6',
@@ -29,8 +30,14 @@ function formatCount(n) {
 
 export default function App() {
 
+  //STATE
+  const [isFollowing, setIsFollowing] = useState(false);
+
+
+  // TODO STEP 1: write the event handlers (handleFollowPress, handleMessagePress, handleSharePress)
+  //HANDLER EVENTS
   const handleFollowPress = () => {
-    Alert.alert('Follow button pressed');
+    setIsFollowing(!isFollowing);
   };
 
   const handleMessagePress = () => {
@@ -42,15 +49,17 @@ export default function App() {
   };
 
   // STEP 3: followers must grow by 1 while you are following
-  const followers = BASE_FOLLOWERS;
+  const followers = BASE_FOLLOWERS + (isFollowing ? 1 : 0);
   const stats = [
     { label: 'Projects', value: '24' },
     { label: 'Followers', value: formatCount(followers) },
     { label: 'Following', value: '180' },
   ];
 
-  // TODO STEP 1: write the event handlers (handleFollowPress, handleMessagePress, handleSharePress)
+  
   // TODO STEP 3: add the state for follow / unfollow (useState)
+
+
   // TODO STEP 4: add the state for the message composer
   // TODO STEP 5: add the state for the bio, the online status and the selected skills
 
@@ -110,14 +119,17 @@ export default function App() {
                 STEP 2: give them visual feedback with the style function (pressed).
                 STEP 3: make the Follow button toggle between 'Follow' and 'Following'. */}
           <View style={styles.actions}>
-            <Pressable 
-            onPress={handleFollowPress} style={({pressed}) =>[
-                {
-                  opacity: pressed ? 0.6 : 1,
-                },
-                styles.button, styles.buttonPrimary
-              ]}>
-              <Text style={[styles.buttonText, styles.buttonTextPrimary]}>Follow</Text>
+            <Pressable
+              onPress={handleFollowPress}
+              style={({ pressed }) => [
+                styles.button,
+                isFollowing ? styles.buttonFollowing : styles.buttonPrimary,
+                pressed && styles.pressed,
+              ]}
+            >
+              <Text style={[styles.buttonText, !isFollowing && styles.buttonTextPrimary]}>
+                {isFollowing ? 'Following' : 'Follow'}
+              </Text>
             </Pressable>
             <Pressable onPress={handleMessagePress} style={({pressed}) =>[
                 {
